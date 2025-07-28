@@ -7,6 +7,7 @@ from langchain_core.output_parsers import JsonOutputKeyToolsParser, StrOutputPar
 from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 from langchain_core.runnables import RunnableLambda
 from langchain_core.tools import tool
+from pydantic import BaseModel, Field
 
 load_dotenv(override=True)
 
@@ -14,7 +15,10 @@ load_dotenv(override=True)
 #
 # print(OPENWEATHER_API_KEY)
 
-@tool
+class WeatherQuery(BaseModel):
+    loc: str = Field(description="城市名称，比如 'Beijing', 'Shanghai' 等")
+
+@tool(args_schema=WeatherQuery)
 def get_weather(loc):
     """获取指定城市的天气信息
     
